@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+/*src/styles/globals.css*/
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-neutral-200;
+  }
+  
+  body {
+    @apply bg-white text-gray-900 font-sans antialiased; /* Fixed: changed from bg-background/text-foreground to standard colors */
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
+  }
+}
+
+@layer components {
+  .measurement-card {
+    @apply bg-white rounded-xl shadow-lg border border-gray-100 p-6 hover:shadow-xl transition-all duration-300;
+  }
+  
+  .ai-processing {
+    @apply relative overflow-hidden;
+  }
+  
+  .ai-processing::after {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-r from-transparent via-blue-500/20 to-transparent;
+    animation: shimmer 2s infinite;
+  }
+  
+  .confidence-indicator {
+    @apply inline-flex items-center px-2 py-1 rounded-full text-xs font-medium;
+  }
+  
+  .confidence-high {
+    @apply bg-green-100 text-green-800;
+  }
+  
+  .confidence-medium {
+    @apply bg-yellow-100 text-yellow-800;
+  }
+  
+  .confidence-low {
+    @apply bg-red-100 text-red-800;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary-600 to-tailor-600 bg-clip-text text-transparent;
+  }
+  
+  .glass {
+    @apply bg-white/10 backdrop-blur-md border border-white/20;
+  }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Three.js Canvas Styles */
+.measurement-scene {
+  @apply w-full h-96 rounded-lg overflow-hidden border border-gray-200;
+}
+
+.measurement-point {
+  @apply absolute w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg;
+  animation: measurementPulse 2s infinite;
+}
+
+.measurement-point.active {
+  @apply bg-green-500;
+}
+
+.measurement-point.completed {
+  @apply bg-gray-400;
+}
