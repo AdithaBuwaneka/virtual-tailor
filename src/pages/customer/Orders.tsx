@@ -228,13 +228,13 @@ export const CustomerOrders: React.FC = () => {
                     <div>
                       <p className="text-sm text-gray-600">Order Date</p>
                       <p className="font-medium text-gray-900">
-                        {order.createdAt.toLocaleDateString()}
+                        {new Date(order.createdAt).toLocaleDateString()}
                       </p>
                     </div>
                     <div>
                       <p className="text-sm text-gray-600">Expected Delivery</p>
                       <p className="font-medium text-gray-900">
-                        {order.expectedDelivery.toLocaleDateString()}
+                        {new Date(order.expectedDelivery).toLocaleDateString()}
                       </p>
                     </div>
                   </div>
