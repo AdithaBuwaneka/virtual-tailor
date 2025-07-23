@@ -316,7 +316,7 @@ export const mockCapacityPlan: CapacityPlan = {
 export const initializeMockTailorBusinessData = () => {
   const store = useTailorBusinessStore.getState();
   
-  if (store.portfolioProjects.length === 0) {
+  if (!store.businessMetrics) {
     useTailorBusinessStore.setState({
       businessMetrics: mockBusinessMetrics,
       portfolioProjects: mockPortfolioProjects,
