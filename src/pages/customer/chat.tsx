@@ -34,12 +34,21 @@ const Chat: React.FC = () => {
   }, [tailorId, orderId, createConversation, setActiveConversation])
   
   return (
-    <div className="h-screen bg-gray-50">
-      <div className="p-4">
-        <button onClick={() => window.history.back()} className="text-primary-600 hover:underline mb-4">&larr; Back</button>
+    <div className="h-screen bg-gray-50 flex flex-col overflow-hidden">
+      <div className="p-4 border-b border-gray-200 bg-white shadow-sm flex-shrink-0">
+        <div className="max-w-4xl mx-auto">
+          <button 
+            onClick={() => window.history.back()} 
+            className="text-primary-600 hover:text-primary-800 transition-colors flex items-center gap-2"
+          >
+            <span>&larr;</span> Back
+          </button>
+        </div>
       </div>
-      <div className="max-w-4xl mx-auto">
-        <ChatInterface isMobile={isMobile} />
+      <div className="flex-1 overflow-hidden min-h-0">
+        <div className="max-w-4xl mx-auto h-full p-4">
+          <ChatInterface isMobile={isMobile} className="h-full" />
+        </div>
       </div>
     </div>
   )
