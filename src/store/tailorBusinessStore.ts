@@ -385,11 +385,18 @@ export const useTailorBusinessStore = create<TailorBusinessState>()(
     {
       name: 'tailor-business-store',
       partialize: (state) => ({
+        businessMetrics: state.businessMetrics,
         portfolioProjects: state.portfolioProjects,
         customerProfiles: state.customerProfiles,
         inventoryItems: state.inventoryItems,
         timeEntries: state.timeEntries,
-        automatedReports: state.automatedReports
+        automatedReports: state.automatedReports,
+        marketInsights: state.marketInsights,
+        portfolioAnalytics: state.portfolioAnalytics,
+        productivityMetrics: state.productivityMetrics,
+        capacityPlan: state.capacityPlan,
+        customerSegments: state.customerSegments,
+        certifications: state.certifications
       })
     }
   )

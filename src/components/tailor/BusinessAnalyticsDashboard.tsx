@@ -484,7 +484,7 @@ export const BusinessAnalyticsDashboard: React.FC<BusinessAnalyticsDashboardProp
                           {formatCurrency(customer.totalSpent)}
                         </p>
                         <p className="text-sm text-gray-600">
-                          Last order: {customer.lastOrderDate.toLocaleDateString()}
+                          Last order: {new Date(customer.lastOrderDate).toLocaleDateString()}
                         </p>
                       </div>
                     </div>

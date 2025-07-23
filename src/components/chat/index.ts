@@ -1,0 +1,10 @@
+// Update src/components/chat/index.ts
+export { ChatInterface } from './ChatInterface'
+export { ConversationList } from './ConversationList'
+export { ConversationHeader } from './ConversationHeader'
+export { MessageArea } from './MessageArea'
+export { MessageBubble } from './MessageBubble'
+export { MessageInput } from './MessageInput'
+export { TypingIndicator } from './TypingIndicator'
+export { FileUpload } from './FileUpload'
+export { ChatNotifications } from './ChatNotifications'

@@ -25,9 +25,25 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
   }
   
+  // Handle system messages differently
+  if (message.type === 'system') {
+    return (
+      <div className="flex justify-center my-4">
+        <div className="bg-gray-100 text-gray-600 text-xs px-3 py-2 rounded-full max-w-xs text-center">
+          <p className="italic">{message.content}</p>
+          {showTimestamp && (
+            <p className="text-xs text-gray-400 mt-1">
+              {formatDistanceToNow(new Date(message.timestamp), { addSuffix: true })}
+            </p>
+          )}
+        </div>
+      </div>
+    )
+  }
+  
   return (
     <div className={`flex ${isOwn ? 'justify-end' : 'justify-start'} ${showTimestamp ? 'mt-4' : 'mt-1'}`}>
-      <div className={`flex items-end space-x-2 max-w-xs lg:max-w-md ${isOwn ? 'flex-row-reverse space-x-reverse' : ''}`}>
+      <div className={`flex items-end space-x-2 max-w-xs sm:max-w-sm lg:max-w-md xl:max-w-lg ${isOwn ? 'flex-row-reverse space-x-reverse' : ''}`}>
         {!isOwn && showAvatar && (
           <img
             src={message.senderAvatar || `https://ui-avatars.com/api/?name=${message.senderName}&background=6366f1&color=white`}
@@ -37,7 +53,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
         )}
         
         {!isOwn && !showAvatar && (
-          <div className="w-8 h-8" /> // Spacer
+          <div className="w-8 h-8" />
         )}
         
         <div className={`relative px-4 py-2 rounded-2xl ${
@@ -66,7 +82,9 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
           )}
           
           {message.type === 'file' && (
-            <div className="flex items-center space-x-3 p-2 bg-gray-100 rounded-lg">
+            <div className={`flex items-center space-x-3 p-2 rounded-lg ${
+              isOwn ? 'bg-primary-500 bg-opacity-20' : 'bg-gray-100'
+            }`}>
               <div className="w-10 h-10 bg-gray-300 rounded-lg flex items-center justify-center">
                 📄
               </div>
@@ -91,9 +109,6 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
             </div>
           )}
           
-          {message.type === 'system' && (
-            <p className="text-xs text-center italic opacity-75">{message.content}</p>
-          )}
           
           <div className={`flex items-center justify-between mt-1 ${
             isOwn ? 'text-white' : 'text-gray-500'

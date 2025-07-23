@@ -3,6 +3,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { Order, OrderTracking, ProgressUpdate, OrderModificationRequest } from '../types/order';
 import { OrderStatus } from '../types/order';
+import { mockOrders } from '../data/mockOrderData';
 
 interface OrderState {
   // State
@@ -31,6 +32,7 @@ interface OrderState {
   // Utility Actions
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
+  initializeMockOrders: () => void;
 }
 
 export const useOrderStore = create<OrderState>()(
@@ -301,6 +303,14 @@ export const useOrderStore = create<OrderState>()(
       // Utility Actions
       setLoading: (loading) => set({ loading }),
       setError: (error) => set({ error }),
+      
+      // Initialize mock orders if none exist
+      initializeMockOrders: () => {
+        const currentOrders = get().orders;
+        if (currentOrders.length === 0 || currentOrders.length < mockOrders.length) {
+          set({ orders: mockOrders });
+        }
+      },
     }),
     {
       name: 'order-storage',

@@ -1,6 +1,6 @@
 // src/components/ai/MeasurementCard.tsx
 import React from 'react'
-import { Edit2, Check, X, User } from 'lucide-react'
+import { Edit2, Check, X, User, Play } from 'lucide-react'
 import { Button, Input } from '@/components/ui'
 import { ConfidenceIndicator } from './ConfidenceIndicator'
 import { MEASUREMENT_LABELS, MEASUREMENT_DESCRIPTIONS, formatMeasurement } from '@/utils/measurementHelpers'
@@ -18,6 +18,8 @@ interface MeasurementCardProps {
   onCancel: () => void
   isProcessing: boolean
   isUserAdjusted?: boolean
+  showGuide?: boolean
+  onShowGuide?: () => void
 }
 
 export const MeasurementCard: React.FC<MeasurementCardProps> = ({
@@ -31,7 +33,9 @@ export const MeasurementCard: React.FC<MeasurementCardProps> = ({
   onSave,
   onCancel,
   isProcessing,
-  isUserAdjusted = false
+  isUserAdjusted = false,
+  showGuide = false,
+  onShowGuide
 }) => {
   return (
     <div className={`measurement-card relative ${isEditing ? 'ring-2 ring-primary-500' : ''}`}>
@@ -49,7 +53,21 @@ export const MeasurementCard: React.FC<MeasurementCardProps> = ({
           <h4 className="font-semibold text-gray-900">
             {MEASUREMENT_LABELS[field]}
           </h4>
-          <ConfidenceIndicator confidence={confidence} />
+          <div className="flex items-center gap-2">
+            {onShowGuide && (
+              <Button
+                size="sm"
+                variant={showGuide ? "default" : "outline"}
+                onClick={onShowGuide}
+                disabled={isProcessing}
+                className="text-xs"
+              >
+                <Play className="h-3 w-3 mr-1" />
+                {showGuide ? 'Hide Guide' : 'Show Guide'}
+              </Button>
+            )}
+            <ConfidenceIndicator confidence={confidence} />
+          </div>
         </div>
         <p className="text-xs text-gray-500">
           {MEASUREMENT_DESCRIPTIONS[field]}

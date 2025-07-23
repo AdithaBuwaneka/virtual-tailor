@@ -83,7 +83,7 @@ export const ConversationList: React.FC<ConversationListProps> = ({
                   </p>
                   <span className={`text-xs px-2 py-1 rounded-full ${
                     otherParticipant?.role === 'tailor' 
-                      ? 'bg-tailor-100 text-tailor-800' 
+                      ? 'bg-green-100 text-green-800' 
                       : 'bg-blue-100 text-blue-800'
                   }`}>
                     {otherParticipant?.role}

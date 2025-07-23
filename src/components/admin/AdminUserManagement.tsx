@@ -452,11 +452,7 @@ const AdminUserManagement = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900">User Management</h2>
-          <p className="text-gray-600">Manage customers, tailors, and verification processes</p>
-        </div>
+      <div className="flex items-center justify-end">
         <button className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
           <Plus className="w-4 h-4" />
           <span>Add User</span>

@@ -44,13 +44,13 @@ export const ProgressTracker: React.FC<ProgressTrackerProps> = ({
   ]
   
   return (
-    <div className={clsx('w-full', className)}>
-      <div className="flex items-center justify-between">
+    <div className={clsx('w-full flex justify-center', className)}>
+      <div className="flex items-center justify-center max-w-4xl">
         {steps.map((step, index) => {
           const Icon = step.icon
           
           return (
-            <div key={step.id} className="flex items-center flex-1">
+            <div key={step.id} className="flex items-center">
               {/* Step Circle */}
               <div className="flex flex-col items-center">
                 <div
@@ -86,7 +86,7 @@ export const ProgressTracker: React.FC<ProgressTrackerProps> = ({
               {index < steps.length - 1 && (
                 <div
                   className={clsx(
-                    'flex-1 h-0.5 mx-4 transition-all duration-300',
+                    'w-16 md:w-24 lg:w-32 h-0.5 mx-4 transition-all duration-300',
                     step.status === 'completed' ? 'bg-green-600' : 'bg-gray-300'
                   )}
                 />
