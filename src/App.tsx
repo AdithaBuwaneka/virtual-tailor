@@ -24,7 +24,7 @@ import QualityControlPage from '@/pages/admin/QualityControl'
 import SystemHealthPage from '@/pages/admin/SystemHealth'
 import PaymentMonitoring from '@/pages/admin/PaymentMonitoring'
 import AdminSettings from '@/pages/admin/Settings'
-import Chat from '@/pages/customer/Chat'
+import Chat from '@/pages/customer/chat'
 import { CustomerOrders } from '@/pages/customer/Orders'
 import { CustomerOrderDetails } from '@/pages/customer/OrderDetails'
 
