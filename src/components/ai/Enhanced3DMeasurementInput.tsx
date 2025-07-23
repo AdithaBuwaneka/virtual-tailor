@@ -4,7 +4,7 @@ import { Ruler, User, RotateCcw, Eye, Maximize2, Minimize2, Play } from 'lucide-
 import { Button, Input } from '@/components/ui'
 import { useMeasurement } from '@/hooks/useMeasurement'
 import { useForm } from '@/hooks/useForm'
-import { MeasurementGuideLoader } from '@/components/measurement/MeasurementGuideLoader'
+const MeasurementGuideLoader = React.lazy(() => import('@/components/measurement/MeasurementGuideLoader').then(module => ({ default: module.MeasurementGuideLoader })))
 import type { BasicMeasurements } from '@/types/measurement'
 import { validateMeasurement } from '@/utils/measurementHelpers'
 

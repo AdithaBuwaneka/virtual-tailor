@@ -31,7 +31,7 @@ interface CustomerRelationshipManagementProps {
   onViewCustomer: (customerId: string) => void;
   onEditCustomer: (customerId: string) => void;
   onAddNote: (customerId: string, note: string) => void;
-  onScheduleFollowUp: (customerId: string, date: Date, note: string) => void;
+  onScheduleFollowUp: (customerId: string, date: string, note: string) => void;
   onCreateSegment: (segment: Partial<CustomerSegment>) => void;
 }
 
@@ -41,9 +41,9 @@ export const CustomerRelationshipManagement: React.FC<CustomerRelationshipManage
   segments,
   onViewCustomer,
   onEditCustomer,
-  onAddNote: _onAddNote,
-  onScheduleFollowUp: _onScheduleFollowUp,
-  onCreateSegment: _onCreateSegment
+  onAddNote,
+  onScheduleFollowUp,
+  onCreateSegment
 }) => {
   const [selectedTab, setSelectedTab] = useState<'customers' | 'segments' | 'communications' | 'analytics'>('customers');
   const [searchTerm, setSearchTerm] = useState('');
@@ -378,9 +378,21 @@ export const CustomerRelationshipManagement: React.FC<CustomerRelationshipManage
                           <Edit3 className="w-4 h-4" />
                           Edit
                         </button>
-                        <button className="flex items-center gap-2 px-3 py-1.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm">
+                        <button
+                          // TODO: Replace 'Sample note' with real note input
+                          onClick={() => onAddNote(customer.id, 'Sample note')}
+                          className="flex items-center gap-2 px-3 py-1.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm"
+                        >
                           <MessageCircle className="w-4 h-4" />
-                          Contact
+                          Add Note
+                        </button>
+                        <button
+                          // TODO: Replace date and note with real scheduling UI
+                          onClick={() => onScheduleFollowUp(customer.id, new Date().toISOString(), 'Follow up note')}
+                          className="flex items-center gap-2 px-3 py-1.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm"
+                        >
+                          <Clock className="w-4 h-4" />
+                          Schedule Follow-Up
                         </button>
                       </div>
                     </div>
@@ -408,7 +420,11 @@ export const CustomerRelationshipManagement: React.FC<CustomerRelationshipManage
             <div className="space-y-6">
               <div className="flex justify-between items-center">
                 <h3 className="text-lg font-semibold text-gray-900">Customer Segments</h3>
-                <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                <button
+                  // TODO: Replace with real segment creation UI
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  onClick={() => onCreateSegment({ name: 'New Segment', description: 'Auto-created', customerCount: 0, totalValue: 0, id: 'new' })}
+                >
                   <Plus className="w-4 h-4" />
                   Create Segment
                 </button>
