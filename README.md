@@ -52,7 +52,7 @@ A comprehensive web platform that connects customers with professional tailors f
 
 1. **Clone the repository**
    ```bash
-   [git clone https://github.com/AdithaBuwaneka/virtual-tailor.git](https://github.com/AdithaBuwaneka/virtual-tailor)
+   [git clone https://github.com/AdithaBuwaneka/virtual-tailor](https://github.com/AdithaBuwaneka/virtual-tailor)
    cd virtual-tailor
    ```
 
