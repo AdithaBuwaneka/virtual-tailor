@@ -38,12 +38,12 @@ interface CustomerRelationshipManagementProps {
 export const CustomerRelationshipManagement: React.FC<CustomerRelationshipManagementProps> = ({
   customers,
   communications,
-  segments,  onViewCustomer,
-  onEditCustomer
-  // The following props are currently unused but kept for future functionality
-  // onAddNote,
-  // onScheduleFollowUp,
-  // onCreateSegment
+  segments,
+  onViewCustomer,
+  onEditCustomer,
+  onAddNote: _onAddNote,
+  onScheduleFollowUp: _onScheduleFollowUp,
+  onCreateSegment: _onCreateSegment
 }) => {
   const [selectedTab, setSelectedTab] = useState<'customers' | 'segments' | 'communications' | 'analytics'>('customers');
   const [searchTerm, setSearchTerm] = useState('');
@@ -92,8 +92,8 @@ export const CustomerRelationshipManagement: React.FC<CustomerRelationshipManage
         case 'value': return b.businessMetrics.lifetimeValue - a.businessMetrics.lifetimeValue;
         case 'orders': return b.businessMetrics.totalOrders - a.businessMetrics.totalOrders;
         case 'lastOrder': {
-          const aDate = a.businessMetrics.lastOrderDate?.getTime() || 0;
-          const bDate = b.businessMetrics.lastOrderDate?.getTime() || 0;
+          const aDate = a.businessMetrics.lastOrderDate ? new Date(a.businessMetrics.lastOrderDate).getTime() : 0;
+          const bDate = b.businessMetrics.lastOrderDate ? new Date(b.businessMetrics.lastOrderDate).getTime() : 0;
           return bDate - aDate;
         }
         default: return 0;
@@ -106,7 +106,7 @@ export const CustomerRelationshipManagement: React.FC<CustomerRelationshipManage
     atRisk: customers.filter(c => c.businessMetrics.churnRisk === 'high').length,
     active: customers.filter(c => {
       const daysSinceLastOrder = c.businessMetrics.lastOrderDate 
-        ? (Date.now() - c.businessMetrics.lastOrderDate.getTime()) / (1000 * 60 * 60 * 24)
+        ? (Date.now() - new Date(c.businessMetrics.lastOrderDate).getTime()) / (1000 * 60 * 60 * 24)
         : Infinity;
       return daysSinceLastOrder < 90;
     }).length
@@ -321,7 +321,7 @@ export const CustomerRelationshipManagement: React.FC<CustomerRelationshipManage
                             <div>
                               <p className="text-xs text-gray-500">Last Order</p>
                               <p className="font-semibold text-gray-900">
-                                {customer.businessMetrics.lastOrderDate?.toLocaleDateString() || 'Never'}
+                                {customer.businessMetrics.lastOrderDate ? new Date(customer.businessMetrics.lastOrderDate).toLocaleDateString() : 'Never'}
                               </p>
                             </div>
                           </div>
@@ -514,7 +514,7 @@ export const CustomerRelationshipManagement: React.FC<CustomerRelationshipManage
                           </div>
                           <p className="text-sm text-gray-600 mb-2">{comm.summary}</p>
                           <div className="flex items-center gap-4 text-xs text-gray-500">
-                            <span>{comm.createdAt.toLocaleDateString()}</span>
+                            <span>{new Date(comm.createdAt).toLocaleDateString()}</span>
                             {comm.duration && <span>{comm.duration} min</span>}
                             {comm.followUpRequired && (
                               <span className="text-red-600 font-medium">Follow-up required</span>

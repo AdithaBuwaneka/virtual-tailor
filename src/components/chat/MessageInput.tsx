@@ -35,10 +35,12 @@ export const MessageInput: React.FC<MessageInputProps> = ({ conversationId }) =>
     setMessage(e.target.value)
     handleTyping()
     
-    // Auto-resize textarea
+    // Auto-resize textarea with max height constraint
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto'
-      textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px'
+      const scrollHeight = textareaRef.current.scrollHeight
+      const maxHeight = 128 // 32 * 4 = 128px (max-h-32 in Tailwind)
+      textareaRef.current.style.height = Math.min(scrollHeight, maxHeight) + 'px'
     }
   }
   
@@ -80,7 +82,7 @@ export const MessageInput: React.FC<MessageInputProps> = ({ conversationId }) =>
   }
   
   return (
-    <div className="p-4 border-t border-gray-200 bg-white">
+    <div className="p-4 border-t border-gray-200 bg-white flex-shrink-0">
       {/* File Upload Modal */}
       {showFileUpload && (
         <div className="mb-4">

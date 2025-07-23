@@ -67,7 +67,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
   }
   
   return (
-    <div className={`flex h-full bg-white rounded-lg shadow-lg overflow-hidden ${className}`}>
+    <div className={`flex h-full max-h-full bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 ${className}`}>
       {/* Conversation List */}
       <div className={`${
         isMobile 
@@ -99,7 +99,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
         isMobile 
           ? (showConversationList ? 'hidden' : 'w-full') 
           : 'flex-1'
-      } flex flex-col`}>
+      } flex flex-col min-h-0`}>
         {activeConversationData ? (
           <>
             <ConversationHeader
@@ -107,7 +107,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
               onBack={isMobile ? handleBackToList : undefined}
             />
             
-            <div className="flex-1 overflow-hidden">
+            <div className="flex-1 overflow-hidden min-h-0">
               <MessageArea
                 messages={activeMessages}
                 conversationId={activeConversation!}

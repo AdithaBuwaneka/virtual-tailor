@@ -261,11 +261,7 @@ const AdminOrderAnalytics = () => {  const [timeRange, setTimeRange] = useState(
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900">Order Analytics</h2>
-          <p className="text-gray-600">Comprehensive order performance and business intelligence</p>
-        </div>
+      <div className="flex items-center justify-end">
         <div className="flex items-center space-x-3">
           <select
             value={timeRange}

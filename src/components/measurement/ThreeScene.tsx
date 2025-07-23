@@ -5,6 +5,7 @@ import { OrbitControls, Environment, Html } from '@react-three/drei'
 import * as THREE from 'three'
 import { LoadingSpinner } from '@/components/ui'
 import { MeasurementPoints } from './MeasurementPoints'
+import { HumanModel } from './HumanModel'
 
 interface ThreeSceneProps {
   measurements?: {
@@ -128,10 +129,13 @@ export const ThreeScene: React.FC<ThreeSceneProps> = ({
           
           {/* Environment */}
           <Environment preset="studio" />
-          
-          {/* 3D Content */}
+            {/* 3D Content */}
           <Suspense fallback={<SceneLoader />}>
             {/* Human Model */}
+            <HumanModel 
+              measurements={measurements}
+              position={[0, -50, 0]}
+            />
             
             {/* Measurement Points */}
             {showMeasurementPoints && (
