@@ -9,11 +9,11 @@ const Home: React.FC = () => {
       <section className="relative py-20 px-4">
         <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-5xl md:text-7xl font-display font-bold text-gray-900 mb-6">
-            AI-Powered <span className="text-gradient">Custom Tailoring</span>
+            World's First Interactive <span className="text-gradient">3D Custom Tailoring Platform</span>
           </h1>
           <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-4xl mx-auto">
-            Get perfect-fitting garments with just 3 measurements. Our AI completes your profile 
-            and connects you with skilled tailors worldwide.
+            3D Measurement System: Interactive browser-based models guide customers through 
+            accurate at-home measurements with real-time validation and AI-powered completion.
           </p>
           
           {/* Key Innovation Highlight */}
@@ -75,8 +75,8 @@ const Home: React.FC = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">3-Minute Setup</h3>
-              <p className="text-gray-600">Complete your measurement profile in under 3 minutes, not 30+ minutes</p>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">3D Browser Experience</h3>
+              <p className="text-gray-600">Interactive 3D models guide you through measurements directly in your browser</p>
             </div>
             <div className="text-center p-6">
               <div className="w-16 h-16 bg-green-600 text-white rounded-xl flex items-center justify-center mx-auto mb-4">

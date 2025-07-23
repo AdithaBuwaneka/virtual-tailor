@@ -1,13 +1,12 @@
 // Updated src/pages/customer/TailorProfile.tsx (enhanced with chat integration)
 import React, { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { ArrowLeft, Star, MapPin, Clock, Award, Heart, Share2, CheckCircle, Video } from 'lucide-react'
+import { ArrowLeft, Star, MapPin, Clock, Award, Heart, Share2, CheckCircle } from 'lucide-react'
 import { Button, LoadingSpinner } from '@/components/ui'
 import { useTailor } from '@/hooks/useTailor'
 import { PortfolioGallery } from '@/components/customer/PortfolioGallery'
 import { ReviewsList } from '@/components/customer/ReviewsList'
 import { QuickChatButton } from '@/components/chat/QuickChatButton'
-import { VideoConsultation } from '@/components/chat/VideoConsultation'
 import { formatPrice, formatRating, getSpecialtyColor } from '@/utils/tailorHelpers'
 
 const TailorProfile: React.FC = () => {
@@ -15,7 +14,6 @@ const TailorProfile: React.FC = () => {
   const { selectedTailor, isLoading, error, selectTailor } = useTailor()
   const [activeTab, setActiveTab] = useState<'portfolio' | 'reviews' | 'about'>('portfolio')
   const [isFavorited, setIsFavorited] = useState(false)
-  const [showVideoConsultation, setShowVideoConsultation] = useState(false)
   
   useEffect(() => {
     if (tailorId) {
@@ -150,14 +148,6 @@ const TailorProfile: React.FC = () => {
                       className="flex-1"
                     />
                     
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setShowVideoConsultation(true)}
-                    >
-                      <Video className="h-4 w-4 mr-2" />
-                      Video Call
-                    </Button>
                   </div>
                   
                   <div className="grid grid-cols-2 gap-3">
@@ -297,14 +287,6 @@ const TailorProfile: React.FC = () => {
                   variant="button"
                   className="w-full justify-start"
                 />
-                <Button
-                  variant="outline"
-                  className="w-full justify-start"
-                  onClick={() => setShowVideoConsultation(true)}
-                >
-                  <Video className="h-4 w-4 mr-2" />
-                  Schedule Video Call
-                </Button>
               </div>
             </div>
             
@@ -330,13 +312,6 @@ const TailorProfile: React.FC = () => {
         </div>
       </div>
       
-      {/* Video Consultation Modal */}
-      <VideoConsultation
-        tailorId={tailor.id}
-        tailorName={`${tailor.firstName} ${tailor.lastName}`}
-        isOpen={showVideoConsultation}
-        onClose={() => setShowVideoConsultation(false)}
-      />
     </div>
   )
 }

@@ -22,17 +22,22 @@ const TailorDashboard: React.FC = () => {
   const {
     getTailorOrders,
     acceptOrder,
-    rejectOrder
+    rejectOrder,
+    initializeMockOrders
   } = useOrderStore()
   
   const { user } = useAuthStore()
 
   useEffect(() => {
-    // Initialize mock data if not already loaded
-    if (!businessMetrics) {
-      initializeMockTailorBusinessData()
+    // Initialize mock data when component mounts or when user changes
+    if (user && user.role === 'tailor') {
+      if (!businessMetrics) {
+        initializeMockTailorBusinessData()
+      }
+      // Initialize mock orders
+      initializeMockOrders()
     }
-  }, [businessMetrics])
+  }, [user, businessMetrics, initializeMockOrders])
 
   if (!businessMetrics || !user) {
     return (
@@ -44,6 +49,14 @@ const TailorDashboard: React.FC = () => {
   
   // Get orders for the current tailor
   const tailorOrders = getTailorOrders(user.id)
+  
+  // Calculate order statistics
+  const pendingOrders = tailorOrders.filter(order => order.status === 'pending_acceptance').length
+  const inProgressOrders = tailorOrders.filter(order => order.status === 'in_progress' || order.status === 'accepted').length
+  const completedOrders = tailorOrders.filter(order => order.status === 'completed').length
+  const monthlyEarnings = tailorOrders
+    .filter(order => order.status === 'completed' && order.paymentStatus === 'paid')
+    .reduce((total, order) => total + order.totalPrice, 0)
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
@@ -88,26 +101,26 @@ const TailorDashboard: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             <div className="measurement-card">
               <h3 className="text-lg font-semibold text-gray-900 mb-2">New Orders</h3>
-              <div className="text-3xl font-bold text-primary-600 mb-2">3</div>
+              <div className="text-3xl font-bold text-primary-600 mb-2">{pendingOrders}</div>
               <p className="text-gray-600 text-sm">Pending acceptance</p>
             </div>
 
             <div className="measurement-card">
               <h3 className="text-lg font-semibold text-gray-900 mb-2">In Progress</h3>
-              <div className="text-3xl font-bold text-tailor-600 mb-2">7</div>
+              <div className="text-3xl font-bold text-orange-600 mb-2">{inProgressOrders}</div>
               <p className="text-gray-600 text-sm">Active projects</p>
             </div>
 
             <div className="measurement-card">
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Completed</h3>
-              <div className="text-3xl font-bold text-green-600 mb-2">24</div>
-              <p className="text-gray-600 text-sm">This month</p>
+              <div className="text-3xl font-bold text-green-600 mb-2">{completedOrders}</div>
+              <p className="text-gray-600 text-sm">All time</p>
             </div>
 
             <div className="measurement-card">
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Earnings</h3>
-              <div className="text-3xl font-bold text-gray-900 mb-2">$2,400</div>
-              <p className="text-gray-600 text-sm">This month</p>
+              <div className="text-3xl font-bold text-gray-900 mb-2">${monthlyEarnings}</div>
+              <p className="text-gray-600 text-sm">From completed orders</p>
             </div>
           </div>
 
@@ -174,11 +187,9 @@ const TailorDashboard: React.FC = () => {
           onAcceptOrder={(orderId) => acceptOrder(orderId)}
           onRejectOrder={(orderId, reason) => rejectOrder(orderId, reason)}
           onViewDetails={(orderId) => {
-            // Would typically navigate to a detail page
             console.log(`View order details for ${orderId}`)
           }}
           onContactCustomer={(customerId) => {
-            // Would typically open a chat/messaging interface
             console.log(`Contact customer ${customerId}`)
           }}
         />
@@ -190,23 +201,18 @@ const TailorDashboard: React.FC = () => {
           communications={communicationRecords}
           segments={customerSegments}
           onViewCustomer={(customerId) => {
-            // Would typically navigate to customer details
             console.log(`View customer details for ${customerId}`)
           }}
           onEditCustomer={(customerId) => {
-            // Would typically open an edit form
             console.log(`Edit customer ${customerId}`)
           }}
           onAddNote={(customerId, note) => {
-            // Would add a note to customer
             console.log(`Add note for ${customerId}: ${note}`)
           }}
           onScheduleFollowUp={(customerId, date, note) => {
-            // Would schedule a follow-up
             console.log(`Schedule follow-up for ${customerId} on ${date}: ${note}`)
           }}
           onCreateSegment={(segment) => {
-            // Would create a new customer segment
             console.log('Create segment:', segment)
           }}
         />
