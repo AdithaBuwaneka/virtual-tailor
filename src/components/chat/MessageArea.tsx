@@ -14,9 +14,42 @@ export const MessageArea: React.FC<MessageAreaProps> = ({
   conversationId
 }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const userScrolledRef = useRef(false)
+  const lastScrollTopRef = useRef(0)
   
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    if (containerRef.current && !userScrolledRef.current) {
+      const container = containerRef.current
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          container.scrollTo({
+            top: container.scrollHeight,
+            behavior: 'smooth'
+          })
+          lastScrollTopRef.current = container.scrollHeight
+        })
+      })
+    }
+  }
+  
+  const handleScroll = () => {
+    if (containerRef.current) {
+      const container = containerRef.current
+      const isAtBottom = container.scrollTop + container.clientHeight >= container.scrollHeight - 50
+      
+      // If user scrolled up, mark as user-scrolled
+      if (container.scrollTop < lastScrollTopRef.current - 10) {
+        userScrolledRef.current = true
+      }
+      
+      // If user scrolled to bottom, reset user-scrolled flag
+      if (isAtBottom) {
+        userScrolledRef.current = false
+      }
+      
+      lastScrollTopRef.current = container.scrollTop
+    }
   }
   
   useEffect(() => {
@@ -38,15 +71,23 @@ export const MessageArea: React.FC<MessageAreaProps> = ({
   }
   
   return (
-    <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+    <div 
+      ref={containerRef}
+      onScroll={handleScroll}
+      className="h-full overflow-y-auto p-4 space-y-4 bg-gray-50"
+    >
       {messages.map((message, index) => {
         const prevMessage = index > 0 ? messages[index - 1] : null
         const nextMessage = index < messages.length - 1 ? messages[index + 1] : null
         
-        const showAvatar = !nextMessage || nextMessage.senderId !== message.senderId
-        const showTimestamp = !prevMessage || 
-          prevMessage.senderId !== message.senderId ||
-          new Date(message.timestamp).getTime() - new Date(prevMessage.timestamp).getTime() > 300000 // 5 minutes
+        // Skip avatar/timestamp logic for system messages
+        const showAvatar = message.type === 'system' ? false : 
+          (!nextMessage || nextMessage.senderId !== message.senderId || nextMessage.type === 'system')
+        const showTimestamp = message.type === 'system' ? true : 
+          (!prevMessage || 
+           prevMessage.senderId !== message.senderId ||
+           prevMessage.type === 'system' ||
+           new Date(message.timestamp).getTime() - new Date(prevMessage.timestamp).getTime() > 300000) // 5 minutes
         
         return (
           <MessageBubble

@@ -1,6 +1,6 @@
 // src/components/chat/ConversationHeader.tsx
 import React from 'react'
-import { ArrowLeft, Phone, Video, MoreVertical } from 'lucide-react'
+import { ArrowLeft, Phone, MoreVertical } from 'lucide-react'
 import { Button } from '@/components/ui'
 import type { ChatConversation } from '@/store/chatStore'
 
@@ -16,7 +16,7 @@ export const ConversationHeader: React.FC<ConversationHeaderProps> = ({
   const otherParticipant = conversation.participants.find(p => p.name !== 'You')
   
   return (
-    <div className="p-4 border-b border-gray-200 bg-white">
+    <div className="p-4 border-b border-gray-200 bg-white flex-shrink-0">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
           {onBack && (
@@ -48,9 +48,6 @@ export const ConversationHeader: React.FC<ConversationHeaderProps> = ({
         <div className="flex items-center space-x-2">
           <Button variant="ghost" size="sm">
             <Phone className="h-4 w-4" />
-          </Button>
-          <Button variant="ghost" size="sm">
-            <Video className="h-4 w-4" />
           </Button>
           <Button variant="ghost" size="sm">
             <MoreVertical className="h-4 w-4" />

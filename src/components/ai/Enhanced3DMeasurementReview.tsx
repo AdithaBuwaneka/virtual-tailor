@@ -1,12 +1,13 @@
 // src/components/ai/Enhanced3DMeasurementReview.tsx
 import React, { useState, Suspense } from 'react'
-import { Check, RotateCcw, Save, ChevronDown, ChevronUp, Maximize2 } from 'lucide-react'
+import { Check, RotateCcw, Save, ChevronDown, ChevronUp, Maximize2, Eye } from 'lucide-react'
 import { Button } from '@/components/ui'
 import { useMeasurement } from '@/hooks/useMeasurement'
 import { ConfidenceIndicator } from './ConfidenceIndicator'
 import { MeasurementCard } from './MeasurementCard'
 const ThreeScene = React.lazy(() => import('@/components/measurement/ThreeScene'))
-import { validateMeasurement } from '@/utils/measurementHelpers'
+const MeasurementGuideLoader = React.lazy(() => import('@/components/measurement/MeasurementGuideLoader').then(module => ({ default: module.MeasurementGuideLoader })))
+import { validateMeasurement, MEASUREMENT_LABELS } from '@/utils/measurementHelpers'
 import type { CompleteMeasurements } from '@/types'
 
 export const Enhanced3DMeasurementReview: React.FC = () => {
@@ -17,6 +18,8 @@ export const Enhanced3DMeasurementReview: React.FC = () => {
   const [show3D, setShow3D] = useState(true)
   const [activePoint, setActivePoint] = useState<string | null>(null)
   const [is3DFullscreen, setIs3DFullscreen] = useState(false)
+  const [activeGuide, setActiveGuide] = useState<string | null>(null)
+  const [isGuideFullscreen, setIsGuideFullscreen] = useState(false)
   
   if (!currentProfile || !predictions) return null
   
@@ -48,6 +51,10 @@ export const Enhanced3DMeasurementReview: React.FC = () => {
     setEditingField(null)
     setEditValue('')
     setActivePoint(null)
+  }
+  
+  const handleGuideToggle = (field: keyof CompleteMeasurements) => {
+    setActiveGuide(activeGuide === field ? null : field)
   }
   
   const handle3DPointClick = (pointId: string) => {
@@ -117,60 +124,9 @@ export const Enhanced3DMeasurementReview: React.FC = () => {
       </div>
       
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-          {/* 3D Visualization Column */}
-          <div className="xl:col-span-1 order-2 xl:order-1">
-            <div className="sticky top-8">
-              {/* 3D Controls */}
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900">3D Model</h3>
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setShow3D(!show3D)}
-                  >
-                    {show3D ? 'Hide' : 'Show'}
-                  </Button>
-                  {show3D && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setIs3DFullscreen(true)}
-                    >
-                      <Maximize2 className="h-4 w-4" />
-                    </Button>
-                  )}
-                </div>
-              </div>
-              
-              {/* 3D Scene */}
-              {show3D && (
-                <Suspense fallback={<div className="flex items-center justify-center h-96"><span>Loading 3D...</span></div>}>
-                  <ThreeScene
-                    measurements={currentProfile.aiPredictions}
-                    onMeasurementClick={handle3DPointClick}
-                    activePoint={activePoint}
-                    className="w-full h-80 xl:h-96"
-                  />
-                </Suspense>
-              )}
-              
-              {/* Overall Confidence */}
-              <div className="mt-4 p-4 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="font-medium text-gray-900">AI Prediction Quality</h4>
-                    <p className="text-sm text-gray-600">ANSUR II data analysis</p>
-                  </div>
-                  <ConfidenceIndicator confidence={averageConfidence} size="large" />
-                </div>
-              </div>
-            </div>
-          </div>
-          
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Measurements Column */}
-          <div className="xl:col-span-2 order-1 xl:order-2">
+          <div className="lg:col-span-2 order-1">
             {/* Measurements by Section */}
             <div className="space-y-6 mb-8">
               {Object.entries(measurementSections).map(([sectionKey, section]) => (
@@ -197,7 +153,7 @@ export const Enhanced3DMeasurementReview: React.FC = () => {
                   
                   {expandedSection === sectionKey && (
                     <div className="p-6 bg-white">
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 gap-4">
                         {section.fields.map((field) => (
                           <div
                             key={field}
@@ -218,6 +174,8 @@ export const Enhanced3DMeasurementReview: React.FC = () => {
                               onCancel={handleCancelEdit}
                               isProcessing={isProcessing}
                               isUserAdjusted={!!currentProfile.userAdjustments?.[field]}
+                              showGuide={activeGuide === field}
+                              onShowGuide={() => handleGuideToggle(field)}
                             />
                           </div>
                         ))}
@@ -257,6 +215,100 @@ export const Enhanced3DMeasurementReview: React.FC = () => {
               </p>
             </div>
           </div>
+          
+          {/* 3D Visualization Column */}
+          <div className="lg:col-span-1 order-2">
+            <div className="sticky top-8">
+              {/* Controls */}
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-gray-900 flex items-center">
+                  <Eye className="h-5 w-5 mr-2" />
+                  {activeGuide ? 'Measurement Guide' : '3D Model'}
+                </h3>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShow3D(!show3D)}
+                  >
+                    {show3D ? 'Hide 3D' : 'Show 3D'}
+                  </Button>
+                  {show3D && !activeGuide && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setIs3DFullscreen(true)}
+                    >
+                      <Maximize2 className="h-4 w-4" />
+                    </Button>
+                  )}
+                  {activeGuide && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setIsGuideFullscreen(true)}
+                    >
+                      <Maximize2 className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
+              </div>
+              
+              {/* Display Area */}
+              {show3D && (
+                <div className="relative">
+                  {activeGuide ? (
+                    <Suspense fallback={
+                      <div className="w-full h-80 lg:h-96 bg-gray-100 rounded-lg flex items-center justify-center">
+                        <span>Loading Measurement Guide...</span>
+                      </div>
+                    }>
+                      <MeasurementGuideLoader
+                        measurementType={activeGuide}
+                        className="w-full h-80 lg:h-96"
+                        showInstructions={true}
+                      />
+                    </Suspense>
+                  ) : (
+                    <Suspense fallback={<div className="flex items-center justify-center h-80 lg:h-96"><span>Loading 3D...</span></div>}>
+                      <ThreeScene
+                        measurements={currentProfile.aiPredictions}
+                        onMeasurementClick={handle3DPointClick}
+                        activePoint={activePoint}
+                        className="w-full h-80 lg:h-96"
+                      />
+                    </Suspense>
+                  )}
+                </div>
+              )}
+              
+              {/* Guide Instructions */}
+              {activeGuide && (
+                <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+                  <h4 className="text-sm font-medium text-blue-900 mb-2">
+                    🎯 How to use the 3D guide:
+                  </h4>
+                  <ul className="text-xs text-blue-800 space-y-1">
+                    <li>• Rotate the model to see different angles</li>
+                    <li>• Use zoom to see details clearly</li>
+                    <li>• Follow the highlighted measurement areas</li>
+                    <li>• Read the instructions at the bottom</li>
+                  </ul>
+                </div>
+              )}
+              
+              {/* Overall Confidence */}
+              <div className="mt-4 p-4 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="font-medium text-gray-900">AI Prediction Quality</h4>
+                    <p className="text-sm text-gray-600">ANSUR II data analysis</p>
+                  </div>
+                  <ConfidenceIndicator confidence={averageConfidence} size="large" />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       
@@ -280,6 +332,34 @@ export const Enhanced3DMeasurementReview: React.FC = () => {
                   onMeasurementClick={handle3DPointClick}
                   activePoint={activePoint}
                   className="w-full h-full"
+                />
+              </Suspense>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Fullscreen Guide Modal */}
+      {isGuideFullscreen && activeGuide && (
+        <div className="fixed inset-0 z-50 bg-white">
+          <div className="h-full flex flex-col">
+            <div className="flex items-center justify-between p-4 border-b">
+              <h3 className="text-lg font-semibold">
+                {MEASUREMENT_LABELS[activeGuide as keyof CompleteMeasurements]} Measurement Guide
+              </h3>
+              <Button
+                variant="outline"
+                onClick={() => setIsGuideFullscreen(false)}
+              >
+                Close Fullscreen
+              </Button>
+            </div>
+            <div className="flex-1">
+              <Suspense fallback={<div className="flex items-center justify-center h-full"><span>Loading Guide...</span></div>}>
+                <MeasurementGuideLoader
+                  measurementType={activeGuide}
+                  className="w-full h-full"
+                  showInstructions={true}
                 />
               </Suspense>
             </div>
